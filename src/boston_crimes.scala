@@ -1,23 +1,17 @@
-import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.expressions.Window
-import org.apache.spark.sql.functions._
-import org.apache.spark.{SparkConf, SparkContext}
 
-
-//Import de MongoDB
 import org.mongodb.scala._
 
 object boston_crimes {
   def main (args: Array[String]): Unit ={
 
     //Para conectar con la base de datos MongoDB
-    //val uri: String = "mongodb+srv://<username>:<password>@<cluster-address>/test?retryWrites=true&w=majority"
-    //System.setProperty("org.mongodb.async.type", "netty")
-    //val client: MongoClient = MongoClient(uri)
-    //val db: MongoDatabase = client.getDatabase("test")
+    val uri: String = "mongodb+srv://<username>:<password>@<cluster-address>/test?retryWrites=true&w=majority"
+    System.setProperty("org.mongodb.async.type", "netty")
+    val client: MongoClient = MongoClient(uri)
+    val db: MongoDatabase = client.getDatabase("test")
 
     val file1 = "C:/Users/ares/IdeaProjects/Spark_Training/Scala/src/offense_codes.csv"
     val file2 = "C:/Users/ares/IdeaProjects/Spark_Training/Scala/src/crime.csv"
@@ -86,13 +80,13 @@ object boston_crimes {
     //crimesFrequency(crimesDF)
 
     //Frecuencia de crimenes por dia
-    //crimesFrecuencyByDay(crimesDF)
+    //crimesFrequencyByDay(crimesDF)
 
     //Frecuencia de crimenes por semana
-    crimesFrecuencyByWeek(crimesDF)
+    crimesFrequencyByWeek(crimesDF)
 
     //Frecuencia de crimenes por año
-    //crimesFrecuencyByYear(crimesDF)
+    //crimesFrequencyByYear(crimesDF)
   }
 
   def crimesFrequency(joinCodeCrimes: DataFrame) = {
@@ -109,7 +103,7 @@ object boston_crimes {
       .show()
   }
 
-  def crimesFrecuencyByDay(joinCodeCrimes: DataFrame) = {
+  def crimesFrequencyByDay(joinCodeCrimes: DataFrame) = {
     joinCodeCrimes
       .select(col("OFFENSE_CODE"),col("DAY_OF_WEEK"),col("NAME"))
       .groupBy(col("DAY_OF_WEEK"))
@@ -117,7 +111,7 @@ object boston_crimes {
       .show()
   }
 
-  def crimesFrecuencyByWeek(joinCodeCrimes: DataFrame) = {
+  def crimesFrequencyByWeek(joinCodeCrimes: DataFrame) = {
     joinCodeCrimes
       .select(col("OFFENSE_CODE"),col("WEEK"),col("YEAR"), col("NAME"))
       .groupBy(col("WEEK"),col("YEAR"))
@@ -125,7 +119,7 @@ object boston_crimes {
       .show()
   }
 
-  def crimesFrecuencyByYear(joinCodeCrimes: DataFrame) = {
+  def crimesFrequencyByYear(joinCodeCrimes: DataFrame) = {
     joinCodeCrimes
       .select(col("OFFENSE_CODE"),col("YEAR"),col("NAME"))
       .groupBy(col("YEAR"))
